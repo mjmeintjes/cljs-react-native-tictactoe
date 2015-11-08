@@ -9,7 +9,7 @@
   :exclusions [cljsjs/react]
   :source-paths ["src"]
 
-  :clean-targets ^{:protect false} ["build" "target"  ]
+  :clean-targets ^{:protect false} ["build" "build_test"]
 
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src"]
@@ -26,9 +26,11 @@
                                    :output-dir "build/out"
                                    :source-map-timestamp true}}
 
-                       {:id "min"
-                        :source-paths ["src/cljs"]
+                       {:id "test"
+                        :source-paths ["src"]
                         :compiler {:main reagent-tictactoe.core
-                                   :output-to "resources/public/js/compiled/app.js"
-                                   :optimizations :advanced
-                                   :pretty-print false}}]})
+                                   :asset-path "build_test/out"
+                                   :output-to "build_test/reagent_tictactoe.js"
+                                   :output-dir "build_test/out"
+                                   :output-wrapper nil
+                                   :optimizations :simple}}]})

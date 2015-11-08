@@ -5,7 +5,8 @@
 'use strict';
 
 var React = require('react-native');
-var FigBridge = require('FigwheelBridge');
+var App = require('./build/reagent_tictactoe.js');
+//var FigBridge = require('FigwheelBridge');
 
 var {
   AppRegistry,
@@ -17,7 +18,7 @@ var appRoot = React.createClass({
   render: function() {
     return (
       <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-        <Text>Loading application</Text>
+        <Text>Loading application...</Text>
       </View>
     );
   }
@@ -26,7 +27,7 @@ var appRoot = React.createClass({
 AppRegistry.registerComponent('tictactoe', () => appRoot);
 
 // For some reason, Reagent doesn't render on inital load unless this is async...
-setTimeout(FigBridge.start, 1);
+//setTimeout(FigBridge.start, 1);
 
 
 
