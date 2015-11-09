@@ -1,4 +1,4 @@
-(ns reactant.macro
+(ns reagent-native.macro
   (:require [clojure.string :as string]))
 
 (defn snake-case->camel-case [^String input-str]

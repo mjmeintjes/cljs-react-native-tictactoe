@@ -40,7 +40,7 @@ function startEverything() {
     importJs('/goog/deps.js');
     goog.require('figwheel.connect');
       console.log('loading app');
-    goog.require('reagent_tictactoe.core');
+    goog.require('tictactoe_android.core');
     shimJsLoader();
 
     console.log('Done loading Figwheel and Clojure app');

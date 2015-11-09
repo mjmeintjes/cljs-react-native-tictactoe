@@ -5,3 +5,7 @@
 build
 app
 build_test
+node_modules
+cache.edn
+*.cache.edn
+test/js
