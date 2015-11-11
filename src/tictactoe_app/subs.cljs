@@ -1,7 +1,31 @@
 (ns tictactoe-app.subs
-    (:require-macros [tictactoe-app.reframe-macros :refer [defsub]])
+  (:require-macros [reagent.ratom :refer [reaction]]
+                   [tictactoe-app.reframe-macros :refer [defsub]])
     (:require [re-frame.core :as re-frame]
+              [reagent.core :as r]
               [cljs.test :refer-macros [deftest is]]))
+
+(defn board-state
+  [db]
+  (get-in db [:board :state]))
+
+(defn current-player
+  [db]
+  (:current-player db))
+
+;;(defn get-sorted-items
+;;  [db]
+;;  (let [items (reaction (:items @db))
+;;        sort-attr (reaction (:sort-attr @db))]
+;;    (reaction (sort-by @sort-attr @items))))
+;;(register-sub :sorted-items get-sorted-items)
+;;
+;;(deftest sorted-items-test
+;;  (let [db (r/atom {:items [{:val 4 :i 1} {:val 1 :i 2} {:val 3 :i 3}] :sort-attr :val})
+;;        res (get-sorted-items db)]
+;;    (is (= [{:val 1 :i 2} {:val 3 :i 3} {:val 4 :i 1}] @res))
+;;    (swap! db assoc :sort-attr :i)
+;;    (is (= [{:val 4 :i 1} {:val 1 :i 2} {:val 3 :i 3}]))))
 
 (defsub board-state
   (get-in db [:board :state]))
@@ -16,7 +40,7 @@
 (deftest should-extract-board-state
   (is (= [:e :e :e] (board-state {:board {:state [:e :e :e]}}))))
 
-(deftest defsub-macroexpand
-  (println (macroexpand '(defsub board-state
-                           (println db)
-                           (get-in db [:board :state])))))
+;; (deftest defsub-macroexpand
+  ;; (println (macroexpand '(defsub board-state
+                           ;; (println db)
+                           ;; (get-in db [:board :state])))))

@@ -13,8 +13,7 @@
   {:board GameBoard})
 
 (def default-db
-  {:current-player 1
-   :board {:state [0 0 0
+  {:board {:state [0 0 0
                    0 0 0
                    0 0 0]}})
 

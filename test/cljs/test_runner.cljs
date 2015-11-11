@@ -2,6 +2,7 @@
   (:require
    [cljs.test :as test :refer-macros [run-tests] :refer [report]]
    [tictactoe-app.db]
+   [tictactoe-android.views]
    [tictactoe-app.subs]))
 
 (enable-console-print!)
@@ -15,5 +16,6 @@
 (defn runner []
   (test/run-tests
    (test/empty-env ::test/default)
+   'tictactoe-android.views
    'tictactoe-app.db
    'tictactoe-app.subs))

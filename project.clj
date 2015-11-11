@@ -27,7 +27,7 @@
                                    :output-dir "build/out"
                                    :source-map-timestamp true}}
                        {:id "unittest"
-                        :source-paths ["src/tictactoe_app" "test"]
+                        :source-paths ["src" "test"]
                         :notify-command ["phantomjs" "test/unit-test.js" "test/unit-test.html"]
                         :compiler {:main test-runner
                                    :optimizations :none

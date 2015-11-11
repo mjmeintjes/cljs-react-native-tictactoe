@@ -10,7 +10,10 @@
 (defn generate-binding [clj-name]
   (let [js-name (snake-case->camel-case (string/capitalize (str clj-name)))
         attr-symbol (symbol (str ".-" js-name))]
-    `(def ~clj-name (reagent.core/adapt-react-class (~attr-symbol js/React)))))
+    `(def ~clj-name
+       (if (:mock js/React)
+         (str "mock/" '~clj-name)
+         (reagent.core/adapt-react-class (~attr-symbol js/React))))))
 
 (defmacro adapt-react-classes [& list]
   (let [generated-bindings (map generate-binding list)]
