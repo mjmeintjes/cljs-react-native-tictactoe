@@ -5,14 +5,6 @@
               [reagent.core :as r]
               [cljs.test :refer-macros [deftest is]]))
 
-(defn board-state
-  [db]
-  (get-in db [:board :state]))
-
-(defn current-player
-  [db]
-  (:current-player db))
-
 ;;(defn get-sorted-items
 ;;  [db]
 ;;  (let [items (reaction (:items @db))
@@ -26,9 +18,11 @@
 ;;    (is (= [{:val 1 :i 2} {:val 3 :i 3} {:val 4 :i 1}] @res))
 ;;    (swap! db assoc :sort-attr :i)
 ;;    (is (= [{:val 4 :i 1} {:val 1 :i 2} {:val 3 :i 3}]))))
+(defsub game-result
+  :not-ended)
 
 (defsub board-state
-  (get-in db [:board :state]))
+  (get-in db [:board]))
 
 (defsub current-player
   (get db :current-player))
@@ -38,7 +32,7 @@
   (is (:board-state @re-frame.subs/key->fn)))
 
 (deftest should-extract-board-state
-  (is (= [:e :e :e] (board-state {:board {:state [:e :e :e]}}))))
+  (is (= [:e :e :e] (board-state {:board [:e :e :e]}))))
 
 ;; (deftest defsub-macroexpand
   ;; (println (macroexpand '(defsub board-state

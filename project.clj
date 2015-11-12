@@ -1,6 +1,7 @@
 (defproject reagent-tictactoe "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.145"]
+                 [com.rpl/specter "0.8.0"]
                  [reagent "0.5.1"]
                  [prismatic/schema "1.0.3"]
                  [re-frame "0.4.1" ]]

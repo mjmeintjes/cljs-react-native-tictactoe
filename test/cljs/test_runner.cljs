@@ -2,7 +2,9 @@
   (:require
    [cljs.test :as test :refer-macros [run-tests] :refer [report]]
    [tictactoe-app.db]
+   [tictactoe-app.handlers]
    [tictactoe-android.views]
+   [reagent-native.react]
    [tictactoe-app.subs]))
 
 (enable-console-print!)
@@ -17,5 +19,7 @@
   (test/run-tests
    (test/empty-env ::test/default)
    'tictactoe-android.views
+   'tictactoe-app.handlers
    'tictactoe-app.db
+   'reagent-native.react
    'tictactoe-app.subs))

@@ -11,9 +11,9 @@
   (let [js-name (snake-case->camel-case (string/capitalize (str clj-name)))
         attr-symbol (symbol (str ".-" js-name))]
     `(def ~clj-name
-       (if (:mock js/React)
-         (str "mock/" '~clj-name)
-         (reagent.core/adapt-react-class (~attr-symbol js/React))))))
+       (if (~attr-symbol js/React)
+         (reagent.core/adapt-react-class (~attr-symbol js/React))
+         (keyword (str "mock-" '~clj-name))))))
 
 (defmacro adapt-react-classes [& list]
   (let [generated-bindings (map generate-binding list)]

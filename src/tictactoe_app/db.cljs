@@ -10,12 +10,14 @@
 
 (def Db
   "A schema for tictactoe game"
-  {:board GameBoard})
+  {:current-player (s/enum 1 2)
+   :board [CellState]})
 
 (def default-db
-  {:board {:state [0 0 0
-                   0 0 0
-                   0 0 0]}})
+  {:current-player 1
+   :board [0 1 0
+           0 2 0
+           0 0 0]})
 
 
 (deftest valid-default
