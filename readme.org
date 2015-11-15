@@ -3,13 +3,20 @@ An example application for using React Native, Reagent and the re-frame applicat
 
 Based on the React Native TicTacToe example found [[https://github.com/facebook/react-native/tree/master/Examples/TicTacToe][here]].
 
-** Features:
+** Main Features:
  * Uses [[https://github.com/adzerk-oss/boot-cljs][boot]] to script different build environments
  * Based on [[https://github.com/Day8/re-frame/][re-frame]] application pattern/library
  * Automatic rebuild and running of unit tests - =boot auto-test=
- * Live reload while developing - =boot dev=
+ * Live reload while developing (does not reset app state) - =boot dev=
  * Fast re-compilation (supports :optimizations :none) - =boot fast-build=
-
+ * Fully playable, free 2 player tic-tac-toe game for your Android phone!
+ 
+** Detailed Features 
+ * Custom React Native Boot tasks to integrate ClojureScript build output with React Packager (allows React Packager to pick up and combine cljs output files, which allows for *much* faster compilation times)
+ * Custom React Native Packager transformer that skips transformation for cljs output files, again increasing the performance of the compilation significantly
+ * "Auto" mocking of React Native when testing - allows unit tests to run in browser environment
+ * Interface agnostic app layer (tictactoe_app), which can also work with web based React or iOS if needed
+ 
 ** Running the application
 *** Install React Native CLI
 =npm -g react-native-cli=
@@ -41,6 +48,7 @@ You'll have to have Android SDK installed for this step - [[https://facebook.git
  * Place some Tic Tac Toe, against yourself, or a friend!
 ** Todo
  * Extract the boot tasks into their own project
+ * Split out reagent-native into its own library
  * Remove the ugly hack that I currently use to choose between live reloading and fast build modes
  * Custom React Native transformer should be specified using command line arguments to the Packager server, and should just derive from the existing one (instead of copying all the code as it currently does.
  * Add deploy boot task to deploy apk with optimizations set to :simple
