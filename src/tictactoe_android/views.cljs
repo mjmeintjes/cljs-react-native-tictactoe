@@ -61,11 +61,9 @@
                               :font-size 20
                               :font-family "AvenirNext-DemiBold"}}))
 
-
 (defn ensure-valid-hiccup
   [comp]
   (reag/render-to-static-markup comp))
-
 
 (defn get-cell-state
   [state]

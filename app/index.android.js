@@ -24,10 +24,30 @@ var appRoot = React.createClass({
 });
 
 AppRegistry.registerComponent('tictactoe', () => appRoot);
-setTimeout(bridge.start, 1);
 
-// For some reason, Reagent doesn't render on inital load unless this is async...
-//setTimeout(FigBridge.start, 1);
+//TODO: This is a terrible hack, need to find better way of switching between the 2 entry points
+try {
+    var app = require('./build/main.js');
+    setTimeout(tictactoe_android.core.init, 1);
+}
+catch (e){
+    if (e.message.indexOf("find variable: document") > -1 || e.message.indexOf("document is not defined") > -1){
+        setTimeout(function() {
+            try {
+                bridge.start();
+                tictactoe_android.core.init();
+            }
+            catch (e) {
+                if (e.message.indexOf('find variable: goog')){
+                    throw new Error("Only works if Chrome Debugging is enabled") ;
+                }
+                throw e;
+            }
+        }, 1);
+    } else {
+        throw e;
+    }
+}
 
 
 

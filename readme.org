@@ -3,10 +3,15 @@ An example application for using React Native, Reagent and the Re-Frame applicat
 
 Based on the React Native TicTacToe example found [[https://github.com/facebook/react-native/tree/master/Examples/TicTacToe][here]].
 
-Features:
- * Unit test running - =boot unittest=
+** Features:
+ * Uses [[https://github.com/adzerk-oss/boot-cljs][boot]] to script different build environments
+ * Based on [[https://github.com/Day8/re-frame/][re-frame]] application pattern/library
+ * Automatic rebuild and running of unit tests - =boot auto-test=
+ * Live reload while developing - =boot dev=
+ * Fast re-compilation (supports :optimizations :none) - =boot fast-build=
 
 ** Running the application
+
 Currently, there are 2 ways of running 
 A [re-frame](https://github.com/Day8/re-frame) applicatio
 # reagent-tictactoe
