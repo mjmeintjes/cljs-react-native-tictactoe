@@ -1,5 +1,5 @@
 (defproject reagent-tictactoe "0.1.0-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.7.0"]
+  :dependencies [[org.skummet/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.145"]
                  [com.rpl/specter "0.8.0"]
                  [reagent "0.5.1"]
@@ -28,14 +28,14 @@
                                    :output-dir "build/out"
                                    :source-map-timestamp true}}
                        {:id "unittest"
-                        :source-paths ["src" "test"]
-                        :notify-command ["phantomjs" "test/unit-test.js" "test/unit-test.html"]
+                        :source-paths ["src" "test" "react-support"]
+                        :notify-command ["phantomjs" "unittest/unit-test.js" "unittest/unit-test.html"]
                         :compiler {:main test-runner
                                    :optimizations :none
                                    :asset-path "js"
                                    :pretty-print true
-                                   :output-to "test/js/tests.js"
-                                   :output-dir "test/js"
+                                   :output-to "unittest/js/tests.js"
+                                   :output-dir "unittest/js"
                                    :warnings {:single-segment-namespace false}}}
 
                        {:id "test"

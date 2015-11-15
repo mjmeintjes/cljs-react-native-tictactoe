@@ -1,0 +1,34 @@
+* Re-Frame React Native TicTacToe
+An example application for using React Native, Reagent and the Re-Frame application pattern to build a native Android application.
+
+Based on the React Native TicTacToe example found [[https://github.com/facebook/react-native/tree/master/Examples/TicTacToe][here]].
+
+Features:
+ * Unit test running - =boot unittest=
+
+** Running the application
+Currently, there are 2 ways of running 
+A [re-frame](https://github.com/Day8/re-frame) applicatio
+# reagent-tictactoe
+
+A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.
+
+## Development Mode
+
+### Run application:
+
+```
+lein clean
+lein figwheel dev
+```
+
+Figwheel will automatically push cljs changes to the browser.
+
+Wait a bit, then browse to [http://localhost:3449](http://localhost:3449).
+
+## Production Build
+
+```
+lein clean
+lein cljsbuild once min
+```

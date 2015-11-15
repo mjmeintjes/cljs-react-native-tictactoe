@@ -9,15 +9,10 @@
 (defn mount-root []
   (rf/dispatch-sync [:initialize-db])
   (r/render [views/root] 1))
-  ;; ((fn render []
-  ;;    (.requestAnimationFrame js/window render))))
-;;(.registerRunnable react/app-registry "tictactoe" mount-root)
 
 (defn ^:export init []
+  (rf/dispatch-sync [:initialize-db])
   (mount-root))
-(.requestAnimationFrame js/window init)
 
 (defn on-js-reload []
-  ;; optionally touch your app-state to force rerendering depending on
-  ;; your application
-  )
+  (init))

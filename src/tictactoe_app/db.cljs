@@ -15,10 +15,9 @@
 
 (def default-db
   {:current-player 1
-   :board [0 1 0
-           0 2 0
+   :board [0 0 0
+           0 0 0
            0 0 0]})
-
 
 (deftest valid-default
   (s/validate Db default-db))

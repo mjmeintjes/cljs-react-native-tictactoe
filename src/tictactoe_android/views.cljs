@@ -43,7 +43,7 @@
                         :bottom 0
                         :left 0
                         :right 0
-                        :background-color "rgba(221, 221, 221, 0.5)"
+                        :background-color "rgba(221, 221, 221, 0.9)"
                         :flex 1
                         :flex-direction "column"
                         :justify-content "center"
@@ -76,6 +76,7 @@
   (is (= :x (get-cell-state 1)))
   (is (= :o (get-cell-state 2))))
 
+
 (defn get-cell-type-style
   [styles style-type state]
   (let [state-kw (get-cell-state state)
@@ -84,6 +85,7 @@
 
 (deftest get-cell-type-style-should-get-style-in-map
   (is (= "result" (get-cell-type-style {:a-x "result"} :a 1))))
+
 
 (defn cell-text-styles [styles state]
   [(styles :cell-text) (get-cell-type-style styles :cell-text state)])
@@ -95,13 +97,13 @@
 
 (defn game-end-message
   [result]
-  (result {:not-ended ""
-           :tie "It's a tie"
-           :x "X wins!"
-           :o "O wins!"}))
+  ({:not-ended ""
+    :tie "It's a tie"
+    1 "X wins!"
+    2 "O wins!"} result))
 
 (deftest game-end-message-should-return-string-message-given-game-result
-  (is (= "X wins!" (game-end-message :x))))
+  (is (= "X wins!" (game-end-message 1))))
 
 (defn game-end-overlay
   [game-result]
@@ -112,7 +114,7 @@
 
       [r/view {:style (styles :overlay)}
        [r/text {:style (styles :overlay-message)} message]
-       [r/touchable-highlight {:on-press #(rf/dispatch [:restart-game])
+       [r/touchable-highlight {:on-press #(rf/dispatch [:restart])
                                :underlay-color "transparent"
                                :active-opacity 0.5}
         [r/view {:style (styles :new-game)}
@@ -123,7 +125,7 @@
   (ensure-valid-hiccup (game-end-overlay (atom :not-ended))))
 
 (deftest game-end-message-should-return-valid-hiccup-if-game-ended
-  (ensure-valid-hiccup (game-end-overlay (atom :x))))
+  (ensure-valid-hiccup (game-end-overlay (atom 1))))
 
 (deftest game-end-message-should-return-empty-view-if-game-not-ended
   (is (= [:mock-view] (game-end-overlay (atom :not-ended)))))
@@ -186,7 +188,7 @@
     (fn []
       (let [row-components (create-board @grid)]
         [r/view {:style (styles :container)}
-         [r/text {:style (styles :title)} "EXTREME CLJS T3"]
+         [r/text {:style (styles :title)} "RE-FRAME T3"]
           row-components
          [game-end-overlay game-result]]))))
 

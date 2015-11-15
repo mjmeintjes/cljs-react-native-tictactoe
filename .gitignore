@@ -10,3 +10,7 @@ cache.edn
 *.cache.edn
 test/js
 nrepl-port
+unittest
+target-separatefiles
+target-old
+.nrepl-history
