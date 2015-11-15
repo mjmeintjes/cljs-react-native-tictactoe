@@ -5,7 +5,6 @@
 'use strict';
 
 var React = require('react-native');
-//var App = require('./build/main.js');
 var bridge = require('ReloadBridge');
 
 var {
@@ -25,9 +24,7 @@ var appRoot = React.createClass({
 });
 
 AppRegistry.registerComponent('tictactoe', () => appRoot);
-setTimeout(function() {
-    bridge.start();
-}, 1);
+setTimeout(bridge.start, 1);
 
 // For some reason, Reagent doesn't render on inital load unless this is async...
 //setTimeout(FigBridge.start, 1);

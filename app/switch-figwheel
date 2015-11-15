@@ -1,4 +1,0 @@
-rm build
-rm index.android.js
-ln ../build build -s
-ln ../react-native/FIGWHEEL.index.android.js index.android.js -s
