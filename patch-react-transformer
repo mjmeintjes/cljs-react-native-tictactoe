@@ -1,1 +1,5 @@
+#! /usr/bin/env bash
+# TODO: Replace this hack with a proper module and integrate with React Native using command line arguments
+# Replaces the react-native transformer with one patched to not transform ClojureScript built files
+# Correct way to do this would be to make the build directory configurable, and set the transformer option when starting the packages
 cp react-native/transformer.js app/node_modules/react-native/packager/transformer.js
