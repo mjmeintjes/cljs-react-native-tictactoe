@@ -34,7 +34,8 @@ Based on the React Native TicTacToe example found [[https://github.com/facebook/
 We do this to speed up the packager, allowing it to skip transformation for any files built by ClojureScript builder.
 
 This is a hack, and something that'll be fixed in the future.
-=cd .. && ./patch-react-transformer)=
+
+=cd .. && ./patch-react-transformer=
 *** Edit the build.boot file
 Change :ws-host "matt-dev" to point to the hostname/ip of your development machine
 *** Start the boot build
