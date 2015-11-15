@@ -32,9 +32,10 @@ This is a hack, and something that'll be fixed in the future.
 *** Start the React Packager in a separate terminal
 You'll have to have Android SDK installed for this step - [[https://facebook.github.io/react-native/docs/android-setup.html][see here for instructions]].
 =(cd app && react-native run-android)= OR =(cd app && npm start)= if you have already installed the Android app
-*** Open Chrome browser, and navigate to http://localhost:8081/debugger-ui
-*** On your Android device, press the hardware menu button (or shake the phone), and select "Debug in Chrome"
-*** Place some Tic Tac Toe, against yourself, or a friend!
+*** Run the app
+ * Open Chrome browser, and navigate to http://localhost:8081/debugger-ui
+ * On your Android device, press the hardware menu button (or shake the phone), and select "Debug in Chrome"
+ * Place some Tic Tac Toe, against yourself, or a friend!
 ** Todo
  * Extract the boot tasks into their own project
  * Remove the ugly hack that I currently use to choose between live reloading and fast build modes
