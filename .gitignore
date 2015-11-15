@@ -3,7 +3,6 @@
 /*-init.clj
 /resources/public/js/compiled
 build
-app
 build_test
 node_modules
 cache.edn

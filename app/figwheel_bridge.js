@@ -1,0 +1,1 @@
+../react-native/figwheel_bridge.js

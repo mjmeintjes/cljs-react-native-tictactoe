@@ -1,0 +1,4 @@
+rm build
+rm index.android.js
+ln ../build_test build -s
+ln ../react-native/TEST.index.android.js index.android.js -s
