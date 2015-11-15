@@ -1,5 +1,5 @@
 * Re-Frame React Native TicTacToe
-An example application for using React Native, Reagent and the Re-Frame application pattern to build a native Android application.
+An example application for using React Native, Reagent and the re-frame application pattern to build a native Android application.
 
 Based on the React Native TicTacToe example found [[https://github.com/facebook/react-native/tree/master/Examples/TicTacToe][here]].
 
@@ -11,29 +11,39 @@ Based on the React Native TicTacToe example found [[https://github.com/facebook/
  * Fast re-compilation (supports :optimizations :none) - =boot fast-build=
 
 ** Running the application
+*** Install React Native CLI
+=npm -g react-native-cli=
+*** Clone this repository
+*** Install React Native
 
-Currently, there are 2 ways of running 
-A [re-frame](https://github.com/Day8/re-frame) applicatio
-# reagent-tictactoe
+#+BEGIN_SRC bash
+    cd app
+    npm i
+    react-native android # Don't overwrite index.android.js or .gitignore
+    react-native upgrade
+#+END_SRC
+*** Patch react-native transformer
+We do this to speed up the packager, allowing it to skip transformation for any files built by ClojureScript builder.
 
-A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.
-
-## Development Mode
-
-### Run application:
-
-```
-lein clean
-lein figwheel dev
-```
-
-Figwheel will automatically push cljs changes to the browser.
-
-Wait a bit, then browse to [http://localhost:3449](http://localhost:3449).
-
-## Production Build
-
-```
-lein clean
-lein cljsbuild once min
-```
+This is a hack, and something that'll be fixed in the future.
+=cd .. && ./patch-react-transformer)=
+*** Start the boot build
+=boot auto-test=
+*** Start the React Packager in a separate terminal
+You'll have to have Android SDK installed for this step - [[https://facebook.github.io/react-native/docs/android-setup.html][see here for instructions]].
+=(cd app && react-native run-android)= OR =(cd app && npm start)= if you have already installed the Android app
+*** Open Chrome browser, and navigate to http://localhost:8081/debugger-ui
+*** On your Android device, press the hardware menu button (or shake the phone), and select "Debug in Chrome"
+*** Place some Tic Tac Toe, against yourself, or a friend!
+** Todo
+ * Extract the boot tasks into their own project
+ * Remove the ugly hack that I currently use to choose between live reloading and fast build modes
+ * Custom React Native transformer should be specified using command line arguments to the Packager server, and should just derive from the existing one (instead of copying all the code as it currently does.
+ * Add deploy boot task to deploy apk with optimizations set to :simple
+ * Add deploy boot task to deploy apk with optimizations set to :advanced? Not sure if this is even worth it.
+ * Add support for iOS? Shouldn't be difficult, but without access to a Mac not possible at the moment?
+** Acknowledgements/Resources
+ * A lot of the work with regards to hot reloading came from [[https://github.com/decker405/figwheel-react-native][decker405]].
+ * Also got a lot of info from [[https://github.com/mfikes/reagent-react-native/][mfikes]] and [[https://github.com/chendesheng/ReagentNativeDemo][chendesheng]].
+ * [[http://cljsrn.org/][Here's]] another great resource with information about ClojureScript and React Native that helped a lot.
+ * Several other projects here on GitHub that I can't find at the moment.
