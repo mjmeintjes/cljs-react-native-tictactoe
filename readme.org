@@ -16,7 +16,14 @@ Based on the React Native TicTacToe example found [[https://github.com/facebook/
  * Custom React Native Packager transformer that skips transformation for cljs output files, again increasing the performance of the compilation significantly
  * "Auto mocking" of React Native when testing - allows unit tests to run in browser environment
  * Interface agnostic app layer (tictactoe_app), which can also work with web based React or iOS if needed
- 
+
+** Developing
+I've found the fastest way to develop with this is to use unit tests. The feedback loop is a lot faster than having to run the app on your device.
+
+To start the auto-tester, just run =boot auto-test=. This will automatically recompile and run your unit tests (defined with =deftest=). It takes about 2 seconds to recompile and run tests on my machine (VirtualBox VM).
+
+Because of the way re-frame is structured, it is pretty easy testing each part in seperation - see [[https://github.com/Day8/re-frame/wiki/Testing][here]] for a good overview of how to test re-frame apps.
+
 ** Running the application (development mode)
 In this mode, hot reload is enabled, which means that any changes you make in your code will automatically be updated on the device (usually within 2 seconds).
 
