@@ -58,6 +58,6 @@ You'll have to have Android SDK installed for this step - [[https://facebook.git
  * Add support for iOS? Shouldn't be difficult, but without access to a Mac not possible at the moment?
 ** Acknowledgements/Resources
  * A lot of the work with regards to hot reloading came from [[https://github.com/decker405/figwheel-react-native][decker405]].
- * Also got a lot of info from [[https://github.com/mfikes/reagent-react-native/][mfikes]] and [[https://github.com/chendesheng/ReagentNativeDemo][chendesheng]].
+ * Also got a lot of info from [[https://github.com/mfikes/reagent-react-native/][mfikes]], [[https://github.com/chendesheng/ReagentNativeDemo][chendesheng]], [[https://github.com/Gonzih/reagent-native][Gonzih]] and [[https://github.com/nicholaskariniemi/ReactNativeCljs][nicholaskariniemi]].
  * [[http://cljsrn.org/][Here's]] another great resource with information about ClojureScript and React Native that helped a lot.
  * Several other projects here on GitHub that I can't find at the moment.
