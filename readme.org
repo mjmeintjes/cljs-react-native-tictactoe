@@ -17,7 +17,15 @@ Based on the React Native TicTacToe example found [[https://github.com/facebook/
  * "Auto mocking" of React Native when testing - allows unit tests to run in browser environment
  * Interface agnostic app layer (tictactoe_app), which can also work with web based React or iOS if needed
  
-** Running the application
+** Running the application (development mode)
+In this mode, hot reload is enabled, which means that any changes you make in your code will automatically be updated on the device (usually within 2 seconds).
+
+The really cool thing is that your application state does not reset - i.e. you can make a few moves, change the headline, and the headline updates but the game state stays the same.
+
+The disadvantage is that it is really slow. Because the way React Native works, in this mode all code is actually executed within Chrome on your computer and the results are then passed back to the device.
+
+This means you can expect 1 second delays after each action.
+
 *** Install React Native CLI
 =npm -g react-native-cli=
 *** Clone this repository
@@ -48,6 +56,17 @@ Run =(cd app && react-native run-android)= OR =(cd app && npm start)= if you hav
  * Open Chrome browser, and navigate to http://localhost:8081/debugger-ui
  * On your Android device, press the hardware menu button (or shake the phone), and select "Debug in Chrome"
  * Place some Tic Tac Toe, against yourself, or a friend!
+
+** Running the application (test mode)
+In this mode, the Javascript code is executed on the device. This is a lot faster, but unfortunately hot-reloading does not work in this mode (yet?).
+
+However, because it still uses =:optimizations :none= to compile the ClojureScript, you'll see changes you make within 2 to 5 seconds.
+
+The steps are similar to above, main difference is that you don't =Debug in Chrome=, and you run =boot fast-build= to start the build. It'll watch your source files for changes and automatically rebuild on any changes.
+
+** Building an apk
+I haven't done a lot of work on getting the deployment story sorted out, but for now it should be possible to just =boot fast-build=, and then follow the instructions [[https://facebook.github.io/react-native/docs/signed-apk-android.html][here] to build the APK. The final output size is about 7.7mb (without any optimizations).
+ 
 ** Todo
  * Extract the boot tasks into their own project
  * Split out reagent-native into its own library
