@@ -1,5 +1,5 @@
 * Re-Frame React Native TicTacToe
-An example application for using React Native, Reagent and the re-frame application pattern to build a native Android application.
+An example application for using [[https://facebook.github.io/react-native/][React Native]], [[https://github.com/reagent-project/reagent][Reagent]] and the [[https://github.com/Day8/re-frame/][re-frame]] application pattern to build a native Android application.
 
 Based on the React Native TicTacToe example found [[https://github.com/facebook/react-native/tree/master/Examples/TicTacToe][here]].
 
