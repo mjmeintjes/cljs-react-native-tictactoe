@@ -41,7 +41,7 @@ Change :ws-host "matt-dev" to point to the hostname/ip of your development machi
 *** Start the boot build
 =boot auto-test=
 *** Start the React Packager in a separate terminal
-You'll have to have Android SDK installed for this step - [[https://facebook.github.io/react-native/docs/android-setup.html][see here for instructions]].
+You'll have to have Android SDK installed for this step - [[https://facebook.github.io/react-native/docs/android-setup.html][see here for instructions]] and your Android device/emulator connected to adb via USB or Wifi.
 =(cd app && react-native run-android)= OR =(cd app && npm start)= if you have already installed the Android app
 *** Run the app
  * Open Chrome browser, and navigate to http://localhost:8081/debugger-ui
