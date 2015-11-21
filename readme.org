@@ -1,5 +1,5 @@
 * Re-Frame React Native TicTacToe
-An example application for using React Native, Reagent and the re-frame application pattern to build a native Android application.
+An example application for using [[https://facebook.github.io/react-native/][React Native]], [[https://github.com/reagent-project/reagent][Reagent]] and the [[https://github.com/Day8/re-frame/][re-frame]] application pattern to build a native Android application.
 
 Based on the React Native TicTacToe example found [[https://github.com/facebook/react-native/tree/master/Examples/TicTacToe][here]].
 
@@ -16,8 +16,23 @@ Based on the React Native TicTacToe example found [[https://github.com/facebook/
  * Custom React Native Packager transformer that skips transformation for cljs output files, again increasing the performance of the compilation significantly
  * "Auto mocking" of React Native when testing - allows unit tests to run in browser environment
  * Interface agnostic app layer (tictactoe_app), which can also work with web based React or iOS if needed
- 
-** Running the application
+
+** Developing
+I've found the fastest way to develop with this is to use unit tests. The feedback loop is a lot faster than having to run the app on your device.
+
+To start the auto-tester, just run =boot auto-test=. This will automatically recompile and run your unit tests (defined with =deftest=). It takes about 2 seconds to recompile and run tests on my machine (VirtualBox VM).
+
+Because of the way re-frame is structured, it is pretty easy testing each part in seperation - see [[https://github.com/Day8/re-frame/wiki/Testing][here]] for a good overview of how to test re-frame apps.
+
+** Running the application (development mode)
+In this mode, hot reload is enabled, which means that any changes you make in your code will automatically be updated on the device (usually within 2 seconds).
+
+The really cool thing is that your application state does not reset - i.e. you can make a few moves, change the headline, and the headline updates but the game state stays the same.
+
+The disadvantage is that it is really slow. Because the way React Native works, in this mode all code is actually executed within Chrome on your computer and the results are then passed back to the device.
+
+This means you can expect 1 second delays after each action.
+
 *** Install React Native CLI
 =npm -g react-native-cli=
 *** Clone this repository
@@ -41,12 +56,24 @@ Change :ws-host "matt-dev" to point to the hostname/ip of your development machi
 *** Start the boot build
 =boot auto-test=
 *** Start the React Packager in a separate terminal
-You'll have to have Android SDK installed for this step - [[https://facebook.github.io/react-native/docs/android-setup.html][see here for instructions]].
-=(cd app && react-native run-android)= OR =(cd app && npm start)= if you have already installed the Android app
+You'll have to have Android SDK installed for this step - [[https://facebook.github.io/react-native/docs/android-setup.html][see here for instructions]] and your Android device/emulator connected to adb via USB or Wifi.
+
+Run =(cd app && react-native run-android)= OR =(cd app && npm start)= if you have already installed the Android app
 *** Run the app
  * Open Chrome browser, and navigate to http://localhost:8081/debugger-ui
  * On your Android device, press the hardware menu button (or shake the phone), and select "Debug in Chrome"
  * Place some Tic Tac Toe, against yourself, or a friend!
+
+** Running the application (test mode)
+In this mode, the Javascript code is executed on the device. This is a lot faster, but unfortunately hot-reloading does not work in this mode (yet?).
+
+However, because it still uses =:optimizations :none= to compile the ClojureScript, you'll see changes you make within 2 to 5 seconds.
+
+The steps are similar to above, main difference is that you don't =Debug in Chrome=, and you run =boot fast-build= to start the build. It'll watch your source files for changes and automatically rebuild on any changes.
+
+** Building an apk
+I haven't done a lot of work on getting the deployment story sorted out, but for now it should be possible to just =boot fast-build=, and then follow the instructions [[https://facebook.github.io/react-native/docs/signed-apk-android.html][here]] to build the APK. The final output size is about 7.7mb (without any optimizations).
+ 
 ** Todo
  * Extract the boot tasks into their own project
  * Split out reagent-native into its own library
@@ -58,6 +85,6 @@ You'll have to have Android SDK installed for this step - [[https://facebook.git
  * Add support for iOS? Shouldn't be difficult, but without access to a Mac not possible at the moment?
 ** Acknowledgements/Resources
  * A lot of the work with regards to hot reloading came from [[https://github.com/decker405/figwheel-react-native][decker405]].
- * Also got a lot of info from [[https://github.com/mfikes/reagent-react-native/][mfikes]] and [[https://github.com/chendesheng/ReagentNativeDemo][chendesheng]].
+ * Also got a lot of info from [[https://github.com/mfikes/reagent-react-native/][mfikes]], [[https://github.com/chendesheng/ReagentNativeDemo][chendesheng]], [[https://github.com/Gonzih/reagent-native][Gonzih]] and [[https://github.com/nicholaskariniemi/ReactNativeCljs][nicholaskariniemi]].
  * [[http://cljsrn.org/][Here's]] another great resource with information about ClojureScript and React Native that helped a lot.
  * Several other projects here on GitHub that I can't find at the moment.
