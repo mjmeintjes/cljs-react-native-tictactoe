@@ -91,13 +91,13 @@
 (defn cell-view-styles [styles state]
   [(styles :cell-view) (get-cell-type-style styles :cell-view state)])
 
-(defn cell-text [state] (get ["" "X" "O"] state))
+(defn cell-text [state] (get ["" "t" "O"] state))
 
 (defn game-end-message
   [result]
   ({:not-ended ""
     :tie "It's a tie"
-    1 "X wins!"
+    1 "X wins! Yeah!"
     2 "O wins!"} result))
 
 (deftest game-end-message-should-return-string-message-given-game-result

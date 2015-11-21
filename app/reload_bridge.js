@@ -105,10 +105,13 @@ function shimJsLoader(){
             }
         };
 
-        // Figwheel needs this to be an async call, so that it can add callbacks to deferred
-        setTimeout(function(){
-            importJs(uri.getPath(), deferred.callAllCallbacks, deferred.callAllErrbacks);
-        }, 1);
+        if (typeof uri === 'string' || uri instanceof String) {
+            //already a string
+        }
+        else {
+            uri = uri.getPath();
+        }
+        importJs(uri, deferred.callAllCallbacks, deferred.callAllErrbacks);
 
 
         return deferred;

@@ -63,6 +63,8 @@
      (reload :on-jsload 'tictactoe-android.core/on-js-reload
              :port 8079
              :ws-host "matt-dev")
+     (cljs-repl :ws-host "matt-dev"
+                :ip "0.0.0.0")
      (cljs :source-map true
            :optimizations :none)
      ))
@@ -71,9 +73,13 @@
   (set-env! :target-path "app/build")
   (comp (serve :dir "app/build/" :port 8082)
      (watch)
+     (cljs-repl :ws-host "matt-dev"
+                :ip "0.0.0.0")
+
      (cljs :source-map true
            :optimizations :none)
      (rn/react-native-devenv)))
 
 (deftask build []
+  (set-env! :target-path "app/build")
   (comp (cljs :optimizations :advanced)))

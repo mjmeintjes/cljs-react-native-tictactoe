@@ -19,6 +19,7 @@ function transform(src, filename, options) {
 
     if (filename.indexOf('/build/') > -1){
         console.log("SKIPPING:" + filename +"\n");
+        console.log(src.slice(0, 300));
         return { code: src };
     };
   if (

@@ -13,3 +13,6 @@ unittest
 target-separatefiles
 target-old
 .nrepl-history
+.nrepl-port
+out
+tests-target

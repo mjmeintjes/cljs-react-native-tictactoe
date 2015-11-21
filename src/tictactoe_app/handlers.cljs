@@ -24,7 +24,6 @@
         cell (+ col (* row 3))
         board (:board db)
         current-state (get board cell)]
-    (println )
     (if (and (= current-state 0) (= (subs/board-game-result board) :not-ended))
       (->> db
            (s/setval [:board (s/keypath cell)] player)
@@ -56,5 +55,4 @@
 (rf/register-handler
  :end-turn
  (fn [data _]
-   (println data)
    (assoc data :current-player (if (= (:current-player data) 1) 2 1))))
