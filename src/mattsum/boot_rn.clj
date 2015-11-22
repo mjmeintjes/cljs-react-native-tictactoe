@@ -6,7 +6,10 @@
             [clojure.pprint :refer [pprint]]
             [boot.file :as fl]
             [boot.util :as util]
+            [clojure.java.io :as io]
+            [me.raynes.conch.low-level :as conch]
             [me.raynes.conch :refer [with-programs]]))
+(use 'alex-and-georges.debug-repl)
 
 
 (defn split-line [line]
@@ -39,10 +42,13 @@
   "Adds react's @providesModule metadata to javascript file"
   [source-file target-file module-name]
   (let [content (slurp source-file)
-        new-content (str "/* \n * @providesModule " (.replace module-name ".js" "") "\n */\n" content)]
+        new-content (str content "\n/* \n * @providesModule " (.replace module-name ".js" "") "\n */\n")]
     (spit target-file new-content)))
 
-(use 'alex-and-georges.debug-repl)
+(defn new-hard-link [src target]
+  (when (fl/exists? target)
+    (fl/delete-file target))
+  (fl/hard-link src target))
 
 (defn setup-links-for-dependency-map
   [dependency-map fileset tmp-dir src-dir]
@@ -51,10 +57,20 @@
     (let [target-file (io/file (str tmp-dir "/node_modules") ns)
           source-file (some->> (str src-dir path)
                                (find-file fileset))
+          map-file    (some->> (str src-dir path ".map")
+                               (find-file fileset))
+          cljs-file   (some->> (.replace (str src-dir path) ".js" ".cljs")
+                               (find-file fileset))
+          target-map (io/file (str tmp-dir "/node_modules") (str ns ".map"))
+          target-cljs (io/file (str tmp-dir "/node_modules") (.replace ns ".js" ".cljs"))
           ]
       (when source-file
         (io/make-parents target-file)
-        (add-provides-module-metadata source-file target-file ns)))))
+        (add-provides-module-metadata source-file target-file ns)
+        (when (and (fl/exists? map-file)
+                   (fl/exists? cljs-file))
+          (new-hard-link map-file target-map)
+          (new-hard-link cljs-file target-cljs))))))
 
 (deftask link-goog-deps
   "Parses Google Closure deps files, and creates a link in the output node_modules directory to each file.
@@ -112,48 +128,23 @@ require('" boot-main "');
             (c/add-resource tmp)
             c/commit!)))))
 
+(defn read-resource
+  [src]
+  (->> src io/resource slurp))
 
 (deftask append-to-goog
   "Appends some javascript code to goog/base.js in order for React Native to work with Google Closure files"
   [o output-dir OUT str  "The cljs :output-dir"]
-  (let []
+  (let [tmp (c/tmp-dir!)]
     (with-pre-wrap fileset
       (let [out-dir (str (or output-dir "main.out") "/")
-            tmp (c/tmp-dir!)
             base-file (->> "goog/base.js"
                            (str out-dir)
                            (find-file fileset))
             base-content (->> base-file
                               slurp)
             out-file (io/file (str tmp "/" out-dir "/goog") "base.js")
-            new-script (str "
-if (typeof global !== 'undefined') {
-    global.goog = goog;
-    var orig_require = goog.require;
-    goog.provide = function(name) {
-        if (goog.isProvided_(name)) {
-            return; //don't throw an error when called multiple times, because it is going to be called multiple times in from react-native
-        }
-        delete goog.implicitNamespaces_[name];
-
-        var namespace = name;
-        while ((namespace = namespace.substring(0, namespace.lastIndexOf('.')))) {
-            if (goog.getObjectByName(namespace)) {
-                break;
-            }
-            goog.implicitNamespaces_[namespace] = true;
-        }
-        goog.exportPath_(name);
-    };
-    goog.require = function(name) {
-        try {
-            require(name);
-        }
-        catch (e) {
-            console.log(e);
-        }
-    };
-}")
+            new-script (->> "mattsum/boot_rn/js/goog_base.js" io/resource slurp)
             out-content (str base-content "\n" new-script)]
         (doto out-file
           io/make-parents
@@ -167,11 +158,36 @@ if (typeof global !== 'undefined') {
      (replace-main)
      (append-to-goog)))
 
+;from boot-restart
+(defn shell [command]
+  (let [args (remove nil? (clojure.string/split command #" "))]
+    (assert (every? string? args))
+    (let [process (apply conch/proc args)]
+      (future (conch/stream-to-out process :out))
+      (future (conch/stream-to process :err (System/err)))
+      process)))
+
+(defn kill [process]
+  (when-not (nil? process)
+    (conch/destroy process)))
+
+(defn exit-code [process]
+  (future (conch/exit-code process)))
+
 (deftask start-rn-packager
-  []
-  (let []
-    (c/with-post-wrap fileset
-      (let [script "/home/matthys/projects/reagent-tictactoej/app/node_modules/react-native/packager/packager.sh"]
-        (with-programs [sh]
-          (sh script))
-        ))))
+  "Starts the React Native packager. Includes a custom transformer that skips transformation for ClojureScript generated files."
+  [a app-dir OUT str  "The (relative) path to the React Native application"]
+  (let [app-dir (or app-dir "app")
+        command (str app-dir "/node_modules/react-native/packager/packager.sh --transformer app/cljs-rn-transformer.js")
+        process (atom nil)]
+    (c/with-pre-wrap fileset
+      (let [start-process #(reset! process (shell command))]
+        (when (nil? @process)
+          (start-process))
+        (let [exit (exit-code @process)]
+          (when (realized? exit) ;;restart server if necessary
+            (if (= 0 @exit)
+              (util/warn "Process exited normally, restarting.")
+              (util/fail "Process crashed, restarting."))
+            (start-process))))
+      fileset))) 

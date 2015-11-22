@@ -13,11 +13,9 @@
 const transformer = require('./node_modules/react-native/packager/transformer');
 
 function transform(src, filename, options) {
-    console.log(filename);
     if (filename.indexOf('/build/') > -1){
-        console.log("NOT TRANSFORMING: " + filename);
-        return { code: src
-                 };
+        return { code: src,
+                 map: filename + ".map" };
     };
     return transformer.transform(src, filename, options);
 }

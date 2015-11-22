@@ -1,6 +1,6 @@
 (set-env!
  :source-paths   #{"src" "react-support"}
- :resource-paths #{"html"}
+ :resource-paths #{"html" "resources"}
  :exclusions ['cljsjs/react]
  :dependencies '[
                  [adzerk/boot-cljs               "1.7.170-3"       :scope  "test"]
@@ -17,8 +17,9 @@
                  [com.rpl/specter                "0.8.0"]
                  [reagent                        "0.5.1"]
                  [prismatic/schema               "1.0.3"]
-                 [re-frame                       "0.4.1"]
+                 [re-frame                       "0.5.0"]
                  [mathias/boot-restart           "0.0.2"]
+                 [com.cemerick/url "0.1.1"]
                  ])
 
 (require
@@ -31,6 +32,8 @@
  '[boot.core                    :as     b]
  '[clojure.string               :as     s]
  '[mattsum.boot-rn              :as     rn]
+ '[mattsum.simple-log-server    :as log]
+
  )
 
 ;;; This prevents a name collision WARNING between the test task and
@@ -71,14 +74,20 @@
 
 (deftask fast-build []
   (set-env! :target-path "app/build")
-  (comp (serve :dir "app/build/" :port 8082)
+  (comp (serve :handler 'mattsum.simple-log-server/log
+            :port 8000)
      (watch)
+     (reload :on-jsload 'tictactoe-android.core/on-js-reload
+             :port 8079
+             :ws-host "matt-dev")
+
      (cljs-repl :ws-host "matt-dev"
                 :ip "0.0.0.0")
 
      (cljs :source-map true
            :optimizations :none)
-     (rn/react-native-devenv)))
+     (rn/react-native-devenv)
+     (rn/start-rn-packager)))
 
 (deftask build []
   (set-env! :target-path "app/build")

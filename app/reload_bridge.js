@@ -5,8 +5,7 @@
 var CLOSURE_UNCOMPILED_DEFINES = null;
 
 var config = {
-    basePath: 'build/main.out/',
-    googBasePath: 'goog/'
+    basePath: '/build',
 };
 
 
@@ -14,10 +13,27 @@ var config = {
 function importJs(src, success, error){
     if(typeof success !== 'function') { success = function(){}; }
     if(typeof error !== 'function') { error = function(){}; }
+    console.log('importing ' + src);
 
-    console.log('(Figwheel Bridge) Importing: ' + config.basePath + src);
+    //Only reload React Native modules created by boot task
+    // fetch("http://matt-dev:8081/" + config.basePath + src)
+        // .then(function(response) {
+            // return response.text();
+        // })
+        // .then(function(script) {
+            // eval(script);
+        // })
+        // .then(success)
+        // .catch(error);
+    // return;
+    if (!src.startsWith('/node_modules')) {
+        success();
+        return;
+    }
+
+    console.log('(Reload Bridge) Importing: ' + src);
+    
     try {
-        src = src.replace("main.out/", "");
         importScripts(config.basePath + src);
         success();
     } catch(e) {
@@ -33,34 +49,44 @@ var shimmed = false;
 function startEverything() {
     if(!shimmed) {
         shimmed = true;
-        console.log('Loading Closure base.');
-        importJs('goog/base.js');
-        console.log(goog);
-        shimBaseGoog();
         fakeLocalStorageAndDocument();
-        importJs('cljs_deps.js');
-        importJs('goog/deps.js');
-        importJs('adzerk/boot_reload.js');
+        shimBaseGoog();
+        console.log('Starting shim setup');
 
         shimJsLoader();
-        adzerk.boot_reload.display.display = function (){};
-        adzerk.boot_reload.reload.reload_html = function (){};
-        adzerk.boot_reload.reload.reload_css = function (){};
-        adzerk.boot_reload.reload.reload_img = function (){};
+        shimAdzerkReload();
 
-
-        console.log('Done loading Figwheel and Clojure app');
+        console.log('Done shimming');
     }
 }
+function setupShims() {
+    shimBaseGoog();
+    fakeLocalStorageAndDocument();
+    shimJsLoader();
+    shimAdzerkReload();
+}
 
+function shimAdzerkReload() {
+    // var old = adzerk.boot_reload.reload.reload_js;
+    // adzerk.boot_reload.reload.reload_js = function(a, b) {
+    //     fetch('http://matt-dev:8000/FETCHING');
+    //     old(a,b);
+    // };
+
+    adzerk.boot_reload.display.display = function (){};
+    adzerk.boot_reload.reload.reload_html = function (){};
+    adzerk.boot_reload.reload.reload_css = function (){};
+    adzerk.boot_reload.reload.reload_img = function (){};
+}
 function shimBaseGoog(){
-    goog.basePath = 'goog/';
-    goog.writeScriptSrcNode = importJs;
-    goog.writeScriptTag_ = function(src, opt_sourceText){
+    //goog.basePath = 'goog/';
+    global.CLOSURE_BASE_PATH = 'goog/';
+    global.CLOSURE_IMPORT_SCRIPT = function(src, opt_sourceText){
         importJs(src);
         return true;
     };
-    goog.inHtmlDocument_ = function(){ return true; };
+    //goog.writeScriptSrcNode = importJs;
+    //goog.inHtmlDocument_ = function(){ return true; };
 }
 
 function fakeLocalStorageAndDocument() {
@@ -68,6 +94,8 @@ function fakeLocalStorageAndDocument() {
     window.localStorage.getItem = function(){ return 'true'; };
     window.localStorage.setItem = function(){};
 
+    window.location = {};
+    window.location.href = 'localhost';
     window.document = {};
     window.document.body = {};
     window.document.body.dispatchEvent = function(){};
@@ -75,6 +103,7 @@ function fakeLocalStorageAndDocument() {
 }
 module.exports = {
     start: startEverything,
+    setupShims: setupShims,
     config: config
 };
 // Used by figwheel - uses importScript to load JS rather than <script>'s
@@ -111,7 +140,9 @@ function shimJsLoader(){
         else {
             uri = uri.getPath();
         }
-        importJs(uri, deferred.callAllCallbacks, deferred.callAllErrbacks);
+        setTimeout(function(){
+            importJs(uri, deferred.callAllCallbacks, deferred.callAllErrbacks); 
+        }, 1)
 
 
         return deferred;

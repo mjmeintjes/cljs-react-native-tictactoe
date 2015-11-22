@@ -6,18 +6,6 @@
             [tictactoe-app.subs :as subs]))
 
 
-(rf/register-handler
- :initialize-db
- (fn  [db _]
-   (if (:board db)
-     db
-     db/default-db)))
-
-(rf/register-handler
- :restart
- (fn  [db _]
-   db/default-db))
-
 (defn update-cell-in-db
   [db row col]
   (let [player (:current-player db)
@@ -33,11 +21,6 @@
 (deftest transform-tests
   (is (= [0 1 0] (s/setval [(s/keypath 1)] 1 [0 0 0]))))
 
-(rf/register-handler
- :cell-pressed
- [rf/trim-v]
- (fn [db [row col]]
-   (update-cell-in-db db row col)))
 
 (deftest update-cell-should-set-state-to-current-player
   (let [board [0 0 0
@@ -52,7 +35,32 @@
                     0 1 2
                     0 2 0]} (update-cell-in-db {:board board :current-player 2} 2 1)))))
 
+(def middlewares [rf/debug])
+
+(rf/register-handler
+ :initialize-db
+ middlewares
+ (fn  [db _]
+   (if (:board db)
+     db
+     db/default-db)))
+
+(rf/register-handler
+ :restart
+ middlewares
+ (fn  [db _]
+   db/default-db))
+
+(rf/register-handler
+ :cell-pressed
+
+ [middlewares rf/trim-v]
+ (fn [db [row col]]
+   (println "cell pressed")
+   (update-cell-in-db db row col)))
+
 (rf/register-handler
  :end-turn
+ middlewares
  (fn [data _]
    (assoc data :current-player (if (= (:current-player data) 1) 2 1))))

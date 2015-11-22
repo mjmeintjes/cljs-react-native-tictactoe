@@ -11,13 +11,17 @@
 'use strict';
 
 const transformer = require('./node_modules/react-native/packager/transformer');
+const fs = require('fs');
 
 function transform(src, filename, options) {
-    console.log(filename);
-    if (filename.indexOf('/build/') > -1){
-        console.log("NOT TRANSFORMING: " + filename);
-        return { code: src
-                 };
+    if (src.indexOf("Compiled by ClojureScript") > -1){
+        var ret = {
+            code : src
+        };
+        if (fs.existsSync(filename + ".map")){
+            ret['map'] = fs.readFileSync(filename + ".map");
+        }
+        return ret;
     };
     return transformer.transform(src, filename, options);
 }

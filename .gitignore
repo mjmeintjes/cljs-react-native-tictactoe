@@ -16,3 +16,5 @@ target-old
 .nrepl-port
 out
 tests-target
+.tern-port
+.tern-port

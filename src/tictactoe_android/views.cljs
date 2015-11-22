@@ -91,7 +91,7 @@
 (defn cell-view-styles [styles state]
   [(styles :cell-view) (get-cell-type-style styles :cell-view state)])
 
-(defn cell-text [state] (get ["" "t" "O"] state))
+(defn cell-text [state] (get ["" "x" "o"] state))
 
 (defn game-end-message
   [result]

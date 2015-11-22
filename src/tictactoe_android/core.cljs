@@ -14,5 +14,5 @@
   (rf/dispatch-sync [:initialize-db])
   (mount-root))
 
-(defn on-js-reload []
+(defn ^:export on-js-reload []
   (init))

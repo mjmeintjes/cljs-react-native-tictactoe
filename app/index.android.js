@@ -3,7 +3,6 @@
  * https://github.com/facebook/react-native
  */
 'use strict';
-
 var React = require('react-native');
 var bridge = require('ReloadBridge');
 
@@ -23,33 +22,25 @@ var appRoot = React.createClass({
   }
 });
 
+console.log('starting bridge');
+
 AppRegistry.registerComponent('tictactoe', () => appRoot);
+setTimeout(function() {
+    var oldlog = global.console.log;
+    global.console.log = function(text) {
+        fetch('http://matt-dev:8000/' + encodeURI(text));
+        oldlog.call(console, text);
+    };
 
-//TODO: This is a terrible hack, need to find better way of switching between the 2 entry points
-try {
+    console.log('started app');
+
+
     var app = require('./build/main.js');
-    setTimeout(tictactoe_android.core.init, 1);
-}
-catch (e){
-    if (e.message.indexOf("find variable: document") > -1 || e.message.indexOf("document is not defined") > -1){
-        setTimeout(function() {
-            try {
-                bridge.start();
-                tictactoe_android.core.init();
-            }
-            catch (e) {
-                if (e.message.indexOf('find variable: goog')){
-                    throw new Error("Only works if Chrome Debugging is enabled") ;
-                }
-                throw e;
-            }
-        }, 1);
-    } else {
-        throw e;
-    }
-}
 
+    console.log('starting bridge');
+    bridge.start();
 
-
-
-
+    console.log('init app');
+    tictactoe_android.core.init();
+    console.log('after init app');
+}, 1);
