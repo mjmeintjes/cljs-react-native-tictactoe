@@ -60,17 +60,6 @@
                              'tictactoe-app.db
                              'reagent-native.react
                              'tictactoe-app.subs])))
-(deftask dev []
-  (set-env! :target-path "app/build")
-  (comp (watch)
-     (reload :on-jsload 'tictactoe-android.core/on-js-reload
-             :port 8079
-             :ws-host "matt-dev")
-     (cljs-repl :ws-host "matt-dev"
-                :ip "0.0.0.0")
-     (cljs :source-map true
-           :optimizations :none)
-     ))
 
 (deftask fast-build []
   (set-env! :target-path "app/build")
