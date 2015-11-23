@@ -7,8 +7,8 @@ Based on the React Native TicTacToe example found [[https://github.com/facebook/
  * Uses [[https://github.com/adzerk-oss/boot-cljs][boot]] to script different build environments
  * Based on [[https://github.com/Day8/re-frame/][re-frame]] application pattern/library
  * Automatic rebuild and running of unit tests - =boot auto-test=
- * Live reload while developing (does not reset app state) - =boot dev=
- * Fast re-compilation (supports :optimizations :none) - =boot fast-build=
+ * Live reload while developing (does not reset app state) and fast re-compilation (supports :optimizations :none) - =boot fast-build=
+ * Logging server to display console.log events from the React application running on your mobile phone on the development CLI
  * Fully playable, free 2 player tic-tac-toe game for your Android phone!
  
 ** Detailed Features 
@@ -45,31 +45,19 @@ This means you can expect 1 second delays after each action.
     react-native android # Don't overwrite index.android.js or .gitignore
     react-native upgrade
 #+END_SRC
-*** Patch react-native transformer
-We do this to speed up the packager, allowing it to skip transformation for any files built by ClojureScript builder.
-
-This is a hack, and something that'll be fixed in the future.
-
-=cd .. && ./patch-react-transformer=
 *** Edit the build.boot file
-Change :ws-host "matt-dev" to point to the hostname/ip of your development machine
+Change occurrences "matt-dev" to point to the hostname/ip of your development machine
 *** Start the boot build
-=boot auto-test=
+=boot fast-build=
+Wait for it to finish building, and then wait for the react packager to start up.
 *** Start the React Packager in a separate terminal
 You'll have to have Android SDK installed for this step - [[https://facebook.github.io/react-native/docs/android-setup.html][see here for instructions]] and your Android device/emulator connected to adb via USB or Wifi.
 
-Run =(cd app && react-native run-android)= OR =(cd app && npm start)= if you have already installed the Android app
+Run =(cd app && react-native run-android)=
 *** Run the app
  * Open Chrome browser, and navigate to http://localhost:8081/debugger-ui
- * On your Android device, press the hardware menu button (or shake the phone), and select "Debug in Chrome"
+ * For hot-reloading to work, you need to start the Chrome Debugger. To do this, on your Android device, press the hardware menu button (or shake the phone), and select "Debug in Chrome"
  * Place some Tic Tac Toe, against yourself, or a friend!
-
-** Running the application (test mode)
-In this mode, the Javascript code is executed on the device. This is a lot faster, but unfortunately hot-reloading does not work in this mode (yet?).
-
-However, because it still uses =:optimizations :none= to compile the ClojureScript, you'll see changes you make within 2 to 5 seconds.
-
-The steps are similar to above, main difference is that you don't =Debug in Chrome=, and you run =boot fast-build= to start the build. It'll watch your source files for changes and automatically rebuild on any changes.
 
 ** Building an apk
 I haven't done a lot of work on getting the deployment story sorted out, but for now it should be possible to just =boot fast-build=, and then follow the instructions [[https://facebook.github.io/react-native/docs/signed-apk-android.html][here]] to build the APK. The final output size is about 7.7mb (without any optimizations).
@@ -78,8 +66,8 @@ I haven't done a lot of work on getting the deployment story sorted out, but for
  * Extract the boot tasks into their own project
  * Split out reagent-native into its own library
  * Split out reagent-native unit testing support into its own library
- * Remove the ugly hack that I currently use to choose between live reloading and fast build modes
- * Custom React Native transformer should be specified using command line arguments to the Packager server, and should just derive from the existing one (instead of copying all the code as it currently does.
+ * +Remove the ugly hack that I currently use to choose between live reloading and fast build modes+
+ * +Custom React Native transformer should be specified using command line arguments to the Packager server, and should just derive from the existing one (instead of copying all the code as it currently does.+
  * Add deploy boot task to deploy apk with optimizations set to :simple
  * Add deploy boot task to deploy apk with optimizations set to :advanced? Not sure if this is even worth it.
  * Add support for iOS? Shouldn't be difficult, but without access to a Mac not possible at the moment?

@@ -26,11 +26,11 @@ console.log('starting bridge');
 
 AppRegistry.registerComponent('tictactoe', () => appRoot);
 setTimeout(function() {
-    var oldlog = global.console.log;
-    global.console.log = function(text) {
-        fetch('http://matt-dev:8000/' + encodeURI(text));
-        oldlog.call(console, text);
-    };
+    // var oldlog = global.console.log;
+    // global.console.log = function(text) {
+        // fetch('http://matt-dev:8000/' + encodeURI(text));
+        // oldlog.call(console, text);
+    // };
 
     console.log('started app');
 
