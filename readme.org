@@ -34,7 +34,7 @@ The disadvantage is that it is really slow. Because the way React Native works, 
 This means you can expect 1 second delays after each action.
 
 *** Install React Native CLI
-=npm -g react-native-cli=
+=npm install -g react-native-cli=
 *** Clone this repository
 =git clone https://github.com/mjmeintjes/cljs-react-native-tictactoe.git=
 *** Install React Native
